@@ -4,12 +4,12 @@
 			<div class="avatar_box">
 				<img src="../assets/logo.png">
 			</div>
-			<el-form label-width="0px" class="login_form">
+			<el-form label-width="0px" class="login_form" :model="form">
 				<el-form-item>
-					<el-input prefix-icon="el-icon-user-solid" ></el-input>
+					<el-input v-model="form.username" prefix-icon="el-icon-user-solid" ></el-input>
 				</el-form-item>
 				<el-form-item>
-					<el-input prefix-icon="el-icon-lock"></el-input>
+					<el-input type="password" v-model="form.password" prefix-icon="el-icon-lock"></el-input>
 				</el-form-item>
 				<el-form-item class="btns">
 					<el-button type="primary">登录</el-button>
@@ -21,13 +21,23 @@
 </template>
 
 <script>
-export default {};
+export default {
+	data() {
+		return {
+			form: {
+				username: 'admin',
+				password: ''
+			}
+		}
+	}
+};
 </script>
 
 <style lang="less" scoped>
 .login_container{
-	heigth: 100%;
-	background-color: #2b4b6b;
+	height: 100%;
+	/*ackground-color: #2b4b6b;*/
+	background-color: #1E90FF;
 }
 .login_box {
 	width: 450px;
@@ -62,7 +72,7 @@ export default {};
 	bottom: 0;
 	width: 100%;
 	padding: 0 20px;
-	boxs-sizing: border-box;
+	box-sizing: border-box;
 }
 .btns {
 	display: flex;
