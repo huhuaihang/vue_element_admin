@@ -27,17 +27,17 @@ export default {
 			// 绑定表单数据
 			form: {
 				username: 'admin',
-				password: ''
+				password: '123456'
 			},
 			// 表单验证规则
 			rules: {
 				username: [
-					{ required: true, message: '请输入登录账号', trigger: 'blur' },
-            		{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+				{ required: true, message: '请输入登录账号', trigger: 'blur' },
+				{ min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
 				],
 				password: [
-					{ required: true, message: '请输入密码', trigger: 'blur' },
-            		{ min: 5, max: 10, message: '密码长度在 5 到 10 个字符', trigger: 'blur' }
+				{ required: true, message: '请输入密码', trigger: 'blur' },
+				{ min: 5, max: 10, message: '密码长度在 5 到 10 个字符', trigger: 'blur' }
 				]
 			}
 		}
@@ -53,7 +53,7 @@ export default {
 				if (res.meta.status !== 200) return this.$message.error("登录失败");
 				this.$message.success('成功');
 				window.sessionStorage.setItem("token", res.data.token);
-				this.$router.push('/Home');
+				this.$router.push('/home');
 			});
 		}
 	}
