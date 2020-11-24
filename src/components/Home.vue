@@ -8,19 +8,22 @@
 			<el-button type="info" @click="logout()">退出</el-button>
 		</el-header>
 		<el-container>
-			<el-aside width="200px">
+			<el-aside :width="isCallapse? '64px' : '200px'">
+				<div class="toggle-button" @click="toggleCollapse"><|||></div>
 				<el-menu
 					default-active="2"
 					class="el-menu-vertical-demo"
 					background-color="#545c64"
 					text-color="#fff"
-					active-text-color="#409BFF">
+					active-text-color="#409BFF" :unique-opened="true" :collapse="isCallapse" 
+					:collapse-transition="false" :router="true" :default-active="activePath">
 					<el-submenu v-for="item in menulist" :key="item.id" :index="item.id + ''">
 						<template slot="title">
 							<i :class="iconList[item.id]"></i>
 							<span>{{item.authName}}</span>
 						</template>
-						<el-menu-item v-for="subItem in item.children" :index="subItem.id + ''">
+						<el-menu-item v-for="subItem in item.children" :index="'/'+subItem.path"
+						:key="subItem.id" @click="saveNavState('/'+subItem.path)">
 							<template slot="title">
 							<i class="el-icon-menu"></i>
 							<span>{{subItem.authName}}</span>
@@ -29,7 +32,9 @@
 					</el-submenu>
 				</el-menu>
 			</el-aside>
-			<el-main>Main</el-main>
+			<el-main>
+				<router-view></router-view>
+			</el-main>
 		</el-container>
 	</el-container>
 	
@@ -46,11 +51,14 @@ export default {
 				'101': 'el-icon-s-goods',
 				'145': 'el-icon-s-marketing',
 			},
-			menulist: []
+			menulist: [],
+			isCallapse: false,
+			activePath: ''
 		}
 	},
 	created() {
 		this.getMenuList()
+		this.activePath = window.sessionStorage.getItem('activePath');
 	},
 	methods:{
 		logout() {
@@ -62,6 +70,13 @@ export default {
 			if (res.meta.status !== 200) return this.$message.error(res.meta.msg) 
 			this.menulist = res.data
 			console.log(this.menulist)
+		},
+		toggleCollapse() {
+			this.isCallapse = !this.isCallapse
+		},
+		saveNavState(activePath) {
+			window.sessionStorage.setItem('activePath', activePath)
+			this.activePath = activePath
 		}
 	}
 }
@@ -90,8 +105,19 @@ export default {
 }
 .el-aside{
 	background-color:#545c64;
+	.el-menu {
+		border-right: none;
+	}
 }
 .el-main{
 	background-color:#fff;
+}
+.toggle-button {
+	background-color: #4a5064;
+	font-size: 10px;
+	color: #fff;
+	text-align: center;
+	letter-spacing: 0.2rem;
+	cursor: pointer;
 }
 </style>
