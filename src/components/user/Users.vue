@@ -79,10 +79,21 @@
 		<el-dialog
 		  title="修改用户信息"
 		  :visible.sync="editDialogVisible"
-		  width="50%">
+		  width="50%" @close="editDialogClosed">
+		  <el-form ref="editFormRef" :model="editForm" :rules="editRules" label-width="70px" class="demo-ruleForm">
+			  <el-form-item label="用户名" prop="username">
+			    <el-input v-model="editForm.username" disabled></el-input>
+			  </el-form-item>
+			  <el-form-item label="邮箱" prop="email">
+			    <el-input v-model="editForm.email"></el-input>
+			  </el-form-item>
+			  <el-form-item label="手机号" prop="mobile">
+			    <el-input v-model="editForm.mobile"></el-input>
+			  </el-form-item>
+			</el-form>
 		  <span slot="footer" class="dialog-footer">
 		    <el-button @click="editDialogVisible = false">取 消</el-button>
-		    <el-button type="primary" @click="editDialogVisible = false">确 定</el-button>
+		    <el-button type="primary" @click="editUserInfo()">确 定</el-button>
 		  </span>
 		</el-dialog>
 	</div>
@@ -112,7 +123,7 @@ export default {
 			queryInfo: {
 				query: '',
 				pagenum: 1,
-				pagesize: 2
+				pagesize: 5
 			},
 			userlist: [],
 			total: 0,
@@ -130,7 +141,7 @@ export default {
 				], 
 				password: [
 				{required: true, message: '请输入密码',  trigger: 'blur'}, 
-				{ min: 6, max: 15, message: '密码的长度在3-10个字符之间', trigger: 'blur'}
+				{ min: 6, max: 15, message: '密码的长度在6-15个字符之间', trigger: 'blur'}
 				],
 				email: [
 				{required: true, message: '请输入邮箱',  trigger: 'blur'},
@@ -142,7 +153,18 @@ export default {
 				], 
 			},
 			editDialogVisible: false,
-			editForm: {}
+			editForm: {},
+			// 修改用户信息验证规则
+			editRules:{
+				email: [
+					{required: true, message: '请输入邮箱', trigger: 'blur'},
+					{validator: checkEmail, trigger: 'blur'}
+				],
+				mobile: [
+					{required: true, message: '请输入手机号', trigger: 'blur'},
+					{validator: checkMobile, trigger: 'blur'}
+				]
+			}
 		}
 	},
 	created() {
@@ -188,14 +210,15 @@ export default {
 					this.$message.error('验证失败！')
 					return 
 				}
-			})
-			const {data: res} = await this.$http.post('users', this.addForm)
-			if (res.meta.status !== 201) {
-				return this.$message.error('添加用户失败！')
-			}
-			this.$message.success('添加成功！')
-			this.addDialogVisible = false
-			this.getUserList()
+				const {data: res} = await this.$http.post('users', this.addForm)
+				if (res.meta.status !== 201) {
+					return this.$message.error('添加用户失败！')
+				}
+				this.$message.success('添加成功！')
+				this.addDialogVisible = false
+				this.getUserList()
+				})
+			
 		},
 		// 编辑用户信息
 		async shwoEditDialog(id) {
@@ -206,6 +229,25 @@ export default {
 			}
 			this.editForm = res.data
 
+		},
+		// 监听关闭对话框
+		editDialogClosed() {
+			this.$refs.editFormRef.resetFields();
+		},
+		// 修改用户信息预验证
+		editUserInfo() {
+			this.$refs.editFormRef.validate(async valid => {
+				if (!valid) return
+				//发起请求修改
+				const {data: res} = await this.$http.put('users/' + this.editForm.id, this.editForm)
+				if(res.meta.status !== 200){
+					return this.$message.error('更新失败！')
+				}
+				this.editDialogVisible = false
+				this.getUserList()
+				this.$message.success('更新成功。')
+			})
+			
 		}
 	}
 }
