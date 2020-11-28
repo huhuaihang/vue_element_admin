@@ -4,3 +4,4 @@
 ## npm install axios --save-dev
 #安装插件
 ## vue add element   //最好是选择full  按需加载有坑  (npm 包版本太低 组件未注册 等等坑)
+## npm i vue-table-with-tree-grid -D // tree-table组件

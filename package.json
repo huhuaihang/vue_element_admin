@@ -34,6 +34,7 @@
     "node-sass": "^4.9.2",
     "sass-loader": "^10.1.0",
     "vue-cli-plugin-element": "^1.0.1",
+    "vue-table-with-tree-grid": "^0.2.4",
     "vue-template-compiler": "^2.6.11"
   }
 }

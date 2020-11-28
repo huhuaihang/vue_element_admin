@@ -4,6 +4,7 @@ import router from './router'
 import './plugins/element.js'
 import './assets/css/global.css'
 import './assets/font/iconfont.css'
+import TreeTable from 'vue-table-with-tree-grid'
 
 import axios from 'axios'
 //配置请求根目录
@@ -16,6 +17,9 @@ axios.interceptors.request.use(config => {
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
+
+//vue tree 树形组件 手动注册
+Vue.component('tree-table', TreeTable)
 
 new Vue({
   router,
